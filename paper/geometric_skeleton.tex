@@ -1,0 +1,11 @@
+% Author: Benjamin Stanley Frohman. Fragment; no Navier--Stokes/Clay claim.
+\section{Geometric skeleton: conservative and dissipative directions}\label{sec:skeleton}
+The classical Lie--Poisson bracket $\{\cdot,\cdot\}_{\mathrm{cl}}$ is antisymmetric (machine-checked, \texttt{classicalBracket\_antisymm}) and satisfies the Jacobi identity (cited, not formalized); this makes it a Poisson bracket whose symplectic leaves are the coadjoint orbits. The tethered sum $\{F,G\}_{\mathfrak T}=\{F,G\}_{\mathrm{cl}}+T(F,G)$ is metriplectic and does not have the same leaves:
+\[
+\{F,F\}_{\mathfrak T}=T(F,F)=-\kappa\|\omega\|^2\!\int|\Pi_u\delta F|^2\le0
+\]
+(\texttt{classicalBracket\_self}, \texttt{tetherKernel\_quadratic\_form}, \texttt{tetherKernel\_C3}); that $T$ is nonzero on some functionals away from the energy direction is stated, not machine-checked for the integrated kernel.
+
+Condition (C2) together with symmetry forces $T(H,\cdot)=T(\cdot,H)=0$ (machine-checked with C2 as hypothesis, \texttt{tetherKernel\_left\_H\_zero}). Hence $\{H,H\}_{\mathfrak T}=0$: the tethered flow conserves kinetic energy and ideal Euler is exactly classical. This separates the conservative skeleton from the dissipative directions. It does \emph{not} yield a damping estimate: $T(M,H)=0$ for every $M$, so the C2/C3 obstruction remains open.
+
+\paragraph{Caveat.} $\delta H/\delta\omega=\psi$ (stream function), not $u$; C2 for the concrete kernel is proved only under \texttt{KineticEnergyDerivIsVelocity}, which is likely false as stated.

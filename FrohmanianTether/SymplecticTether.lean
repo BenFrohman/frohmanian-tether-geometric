@@ -362,7 +362,11 @@ public noncomputable def TetheredBracket (F G : Functional) (ω : CoadjointOrbit
   -- Canonicity is proved only inside the restricted kernel class and under the explicit
   -- hypotheses of `uniqueness_of_minimal_tether` (Uniqueness.lean); it is NOT an
   -- unconditional uniqueness statement. The correction is symmetric, so this bracket is
-  -- not antisymmetric.
+  -- not antisymmetric. Terminology: the classical Lie–Poisson part is antisymmetric
+  -- (`classicalBracket_antisymm`) and Jacobi (cited, not formalized), hence Poisson with
+  -- coadjoint orbits as symplectic leaves; this tethered sum is metriplectic and does not have
+  -- the same leaves. `{F,F}_tethered = T(F,F)` (by `classicalBracket_self`), with
+  -- `T(F,F) = -κ‖ω‖²∫‖Π_u δF‖² ≤ 0` (`tetherKernel_quadratic_form`).
   ClassicalBracket F G ω + TetherKernel ω F G
 
 /-! ## The Three Necessary Conditions (C1)–(C3) — exactly as in the audited LaTeX -/

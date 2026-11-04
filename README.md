@@ -27,6 +27,12 @@ What is formalized:
   permutations of 𝕋³ with Casimir invariance.
 * Classical bracket antisymmetry and `{H,H}_cl = 0` (`ArnoldGeometric`), vorticity scaling
   (`ScalingIdentities.vorticity_rescale`). The full tethered bracket is **not** antisymmetric.
+* Terminology: the classical Lie–Poisson bracket is antisymmetric (`classicalBracket_antisymm`)
+  and satisfies Jacobi (cited, Arnold 1966; not formalized), which makes it Poisson and makes
+  coadjoint orbits its symplectic leaves. The tethered sum is metriplectic and does not have the
+  same leaves: `{F,F}_tethered = T(F,F) = −κ‖ω‖²∫|Π_u δF|² ≤ 0` (`classicalBracket_self`,
+  `tetherKernel_quadratic_form`, `tetherKernel_C3`). "Not identically zero" for the integrated
+  `TetherKernel` is stated, not machine-checked. See `notes/geometric_skeleton.md`.
 
 ## Open assumptions (hypotheses of `Combined.combined_conditional_capstone`)
 
