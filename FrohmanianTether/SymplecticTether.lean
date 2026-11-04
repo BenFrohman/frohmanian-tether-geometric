@@ -1308,3 +1308,28 @@ While the Jacobi crack is still in progress they will show `sorryAx` — this is
 scoped notation "𝔉𝕋" => TetheredBracket
 
 end FrohmanianTether
+
+@[expose] public section
+open InnerProductSpace NavierStokes3D ArnoldGeometric MeasureTheory ForMathlib
+
+namespace FrohmanianTether
+
+/-- Integral form of the tether sign: `T(F,F) ≤ 0` (via `integral_nonneg`, `κ > 0`, `‖ω‖² ≥ 0`). -/
+public theorem tetherKernel_self_nonpos (F : Functional) (ω : CoadjointOrbit) :
+    TetherKernel ω F F ≤ 0 := by
+  have hEns : 0 ≤ Enstrophy ω := by
+    unfold Enstrophy Casimir; exact MeasureTheory.integral_nonneg (fun x => by positivity)
+  rw [tetherKernel_quadratic_form]
+  have hI : 0 ≤ ∫ x, ‖Pi_u (velocity_from_vorticity ω) (FunctionalDerivative F ω) x‖ ^ 2
+      ∂volume := MeasureTheory.integral_nonneg (fun x => by positivity)
+  have hk := kappa_pos
+  have : 0 ≤ kappa * Enstrophy ω * ∫ x,
+      ‖Pi_u (velocity_from_vorticity ω) (FunctionalDerivative F ω) x‖ ^ 2 ∂volume := by
+    positivity
+  linarith
+
+end FrohmanianTether
+
+end
+
+#print axioms FrohmanianTether.tetherKernel_self_nonpos
