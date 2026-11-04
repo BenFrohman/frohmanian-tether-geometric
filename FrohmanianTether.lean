@@ -8,6 +8,7 @@ import FrohmanianTether.ClosureBlueprint
 import FrohmanianTether.Combined
 import FrohmanianTether.ConcreteSDiff
 import FrohmanianTether.ConditionalRegularity
+import FrohmanianTether.DropSymmetryCandidate
 import FrohmanianTether.CubicSourceCertificate
 import FrohmanianTether.ForMathlib.Projection
 import FrohmanianTether.HighSetDepletionAndBKM
