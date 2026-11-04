@@ -1,0 +1,59 @@
+# The Frohmanian Tether on SDiff(𝕋³)
+
+Lean 4 formalization and manuscript for *The Frohmanian Tether on SDiff(𝕋³): A Metriplectic
+Correction, Its Canonicity, and an Obstruction to Damping* (Benjamin Stanley Frohman).
+
+## Scope (read this first)
+
+**This repository does not prove global regularity of the 3D Navier–Stokes equations and makes no
+claim toward the Clay Millennium Problem.** All results about the full program are *conditional
+implications*: every open assumption is an explicit Lean hypothesis.
+
+What is formalized:
+
+* The tether kernel `TetherKernel` (a symmetric quadratic metric correction to the Arnold
+  Lie–Poisson bracket) and the conditions (C1)–(C3).
+* C1 (coadjoint invariance): conditional on `SDiffActionHyp.casimir_invariant` and
+  `TetherIntegralPreserved` (open).
+* C2 (degeneracy w.r.t. kinetic energy): conditional on `KineticEnergyDerivIsVelocity` (open),
+  `div u = 0`, finite kinetic energy.
+* C3 (controllable negative feedback): unconditional (`tetherKernel_C3`).
+* Canonicity: uniqueness only within the restricted kernel class and under the explicit
+  hypotheses of `uniqueness_of_minimal_tether` — not an unconditional uniqueness theorem.
+* **Obstruction to damping (proved):** C2 plus symmetry force `T(M,H) = T(H,M) = 0` for every
+  functional `M` (`Combined.tetherKernel_left_H_zero`). The tether's damping coefficient is 0,
+  so nothing in the geometric layer supplies the rate or closing-bound hypotheses.
+* `ConcreteSDiff`: a concrete subgroup of measurable, measure- and divergence-preserving
+  permutations of 𝕋³ with Casimir invariance.
+* Classical bracket antisymmetry and `{H,H}_cl = 0` (`ArnoldGeometric`), vorticity scaling
+  (`ScalingIdentities.vorticity_rescale`). The full tethered bracket is **not** antisymmetric.
+
+## Open assumptions (hypotheses of `Combined.combined_conditional_capstone`)
+
+`SDiffActionHyp`, `TetherIntegralPreserved`, `KineticEnergyDerivIsVelocity` (likely false as
+stated: the Gateaux representative of ½∫|BS ω|² is the stream function, not the velocity),
+`IsCoadjointMotion`, projection factorization ⇒ density, weight/saturation/non-degeneracy
+hypotheses, `FrohmanianTetherRate` and `FrohmanianTetherClosingBound` (unsupported under the
+symmetric C2 design; Clay-equivalent in strength), the BKM continuation criterion, Kato
+uniqueness, and a Kato local-existence witness. BKM and Kato are cited, not formalized.
+
+## Build
+
+```
+lake exe cache get   # Mathlib v4.30.0-rc1
+lake build
+lake env lean scripts/AxiomAudit.lean
+```
+
+Build: 2712 jobs, zero `sorry`, zero `sorryAx`. `scripts/AxiomAudit.lean` checks all 519
+theorems in `FrohmanianTether.*`: only `propext`, `Classical.choice`, `Quot.sound`.
+
+## Contents
+
+* `FrohmanianTether/` — Lean modules (extracted from the author's NS_Millennium_Proof project,
+  branch `sdiff-abstract-action`, commit `0c9cfdb`).
+* `manuscript/main.tex`, `manuscript/main.pdf` — the paper.
+
+## License
+
+Apache 2.0 (see `LICENSE`). Cite via `CITATION.cff`.
