@@ -594,6 +594,35 @@ public theorem clay_B_exact_of_periodic_tether_bound
     (hBKM : ∀ ν > (0 : ℝ), PeriodicBKMContinuation ν) : Clay_B_exact :=
   fun ν u₀ hν hs hd hp => hBKM ν hν u₀ hd hs hp (hclose ν hν u₀ hd hs hp)
 
+/-! ## The single open assumption: the closing bound
+
+`ClayBClosingBound` below is the one named OPEN hypothesis on the periodic route.
+`ClassicalPeriodicBKM` is classical mathematics (Kato/Temam local theory, uniqueness,
+Beale–Kato–Majda 1984 with parabolic smoothing): known, but not formalized here; it is
+carried as a hypothesis, not as an open conjecture.
+
+Honest scope (no Clay claim):
+* `ClayBClosingBound` is as hard as Clay (B) itself: a time-uniform `‖ω‖_∞` bound for all
+  smooth periodic data is, via BKM, equivalent in strength to global regularity.
+* The tether adds nothing BKM does not already give. Under the symmetric C2 identity,
+  `T(M, H) = 0`, and C3 (`T(F,F) ≤ 0`) only dissipates along directions the kernel sees;
+  the geometric layer therefore supplies no damping term for `M(t) = ‖ω(t)‖_∞`. The C2/C3
+  obstruction sits exactly at this bound.
+* `Clay_A` (ℝ³, decaying data) is NOT wired to `FrohmanianTetherClosingBound`: the ℝ³
+  bridges (decay class, joint `(t,x)` smoothness, uniform energy) are not formalized. -/
+
+/-- Classical periodic BKM continuation for every `ν > 0` (known, not formalized). -/
+@[expose] public def ClassicalPeriodicBKM : Prop := ∀ ν > (0 : ℝ), PeriodicBKMContinuation ν
+
+/-- **The closing bound** (OPEN, as hard as Clay (B)). -/
+@[expose] public def ClayBClosingBound : Prop := ∀ ν > (0 : ℝ), PeriodicTetherClosingBound ν
+
+/-- **Proved (standard axioms).** Given classical periodic BKM, `Clay_B_exact` depends on the
+single open assumption `ClayBClosingBound`. Conditional; not a proof of Clay (B). -/
+public theorem clay_B_exact_of_closing_bound (hBKM : ClassicalPeriodicBKM)
+    (hclose : ClayBClosingBound) : Clay_B_exact :=
+  clay_B_exact_of_periodic_tether_bound hclose hBKM
+
 #print axioms conditional_regularity_nonvacuous_at_zero
 #print axioms frohmanianTetherRate_zero
 #print axioms frohmanianTetherBound_zero
@@ -601,5 +630,6 @@ public theorem clay_B_exact_of_periodic_tether_bound
 #print axioms repaired_huniq_at_zero
 #print axioms stepField_not_physical
 #print axioms clay_B_exact_of_periodic_tether_bound
+#print axioms clay_B_exact_of_closing_bound
 
 end FrohmanianTether.ClayStatements
