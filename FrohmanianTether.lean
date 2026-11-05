@@ -21,3 +21,4 @@ import FrohmanianTether.TetheredLyapunov
 import FrohmanianTether.TorusStrainExclusion
 import FrohmanianTether.Uniqueness
 import FrohmanianTether.VelocitySlotTether
+import FrohmanianTether.ObstructionAudit
