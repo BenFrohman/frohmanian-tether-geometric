@@ -109,6 +109,17 @@ public theorem tetherKernelVel_degenerate
     DegenerateWRTKineticEnergy TetherKernelVel :=
   fun F ω => tetherKernelVel_C2_right ω F (hcurl ω) (hdiv ω) (hInt ω)
 
+/-- Consequence: at a non-differentiable base point a Gâteaux representative
+always exists, so `FunctionalDerivative` is the (unconstrained) choice. -/
+public theorem functionalDerivative_eq_choose_of_not_differentiable
+    (F : CoadjointOrbit → ℝ) (ω : CoadjointOrbit)
+    (hnd : ¬ ∀ i x, DifferentiableAt ℝ (fun y => ω.val y i) x) :
+    ∃ h : (∃ dH, IsGateauxRepresentative F ω dH),
+      FunctionalDerivative F ω = Classical.choose h :=
+  let h : ∃ dH, IsGateauxRepresentative F ω dH :=
+    ⟨0, isGateauxRepresentative_of_not_differentiable F ω hnd 0⟩
+  ⟨h, FunctionalDerivative_eq_choose h⟩
+
 end FrohmanianTether
 
 end
@@ -117,3 +128,5 @@ end
 #print axioms FrohmanianTether.tetherKernelVel_C2
 #print axioms FrohmanianTether.tetherKernelVel_C2_right
 #print axioms FrohmanianTether.tetherKernelVel_degenerate
+#print axioms ArnoldGeometric.isGateauxRepresentative_of_not_differentiable
+#print axioms FrohmanianTether.functionalDerivative_eq_choose_of_not_differentiable

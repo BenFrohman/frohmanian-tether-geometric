@@ -329,6 +329,20 @@ public theorem FunctionalDerivative_eq_choose
     FunctionalDerivative F ω = Classical.choose h :=
   dif_pos h
 
+/-- **Obstruction to proving `KineticEnergyCurlIdentification` as stated (proved).**
+`IsGateauxRepresentative` quantifies over the differentiability proof `hω` of the
+base point, so at any `ω` with a non-differentiable component it holds vacuously
+for EVERY candidate field `δ`. `FunctionalDerivative` is then `Classical.choose`
+of a predicate satisfied by all fields, so its curl is not determined by the
+definitions and the identification cannot be derived for arbitrary `ω`. -/
+public theorem isGateauxRepresentative_of_not_differentiable
+    (F : CoadjointOrbit → ℝ) (ω : CoadjointOrbit)
+    (hnd : ¬ ∀ i x, DifferentiableAt ℝ (fun y => ω.val y i) x)
+    (dH : T3 → EuclideanSpace ℝ (Fin 3)) :
+    IsGateauxRepresentative F ω dH :=
+  fun _ hω _ => (hnd hω).elim
+
+
 /-- Two continuous finite-energy divergence-free Gâteaux representatives
 coincide: the orbit variation in the difference direction forces vanishing
 L² energy, hence the fields are identical. Uniqueness of the derivative
