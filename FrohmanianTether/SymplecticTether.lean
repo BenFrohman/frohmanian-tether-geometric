@@ -358,7 +358,18 @@ pointwise `|ω(x)|²` density is a different object). -/
 
 public noncomputable def TetheredBracket (F G : Functional) (ω : CoadjointOrbit) : ℝ :=
   -- The Frohmanian Symplectic Tether bracket: the classical Arnold Lie–Poisson bracket
-  -- plus the minimal quadratic correction (the tether kernel) that satisfies (C1)–(C3).
+  -- plus the quadratic correction `TetherKernel` (ψ-slot: `Π_u` acts on `δF/δω` itself).
+  -- What is proved for this kernel: C3 as an equality (`tetherKernel_quadratic_form`,
+  -- `tetherKernel_self_nonpos`); C1 only under a named hypothesis (`tether_satisfies_C1`);
+  -- C2 only under the identification `FunctionalDerivative H ω = u`
+  -- (`tetherKernel_C2_of_identifications`) or in the degenerate no-Gâteaux case
+  -- (`tetherKernel_C2_of_no_gateaux`). C2 is NOT proved unconditionally: in the vorticity
+  -- pairing of `IsGateauxRepresentative` the representative of `H` is the stream function
+  -- `ψ`, and with `δH = ψ` C2 fails on an explicit two-mode shear (`shear_C2_fails`,
+  -- commit a52c6af of frohmanian-symplectic-tether-regularity, pointwise-`Π_u` model).
+  -- The velocity-slot kernel `TetherKernelVel` (VelocitySlotTether.lean) gets C2 from
+  -- `curl ψ = u` and `Π_u u = 0` (`tetherKernelVel_C2`, conditional on the named
+  -- `KineticEnergyCurlIdentification`).
   -- Canonicity is proved only inside the restricted kernel class and under the explicit
   -- hypotheses of `uniqueness_of_minimal_tether` (Uniqueness.lean); it is NOT an
   -- unconditional uniqueness statement. The correction is symmetric, so this bracket is
