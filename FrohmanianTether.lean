@@ -24,3 +24,4 @@ import FrohmanianTether.VelocitySlotTether
 import FrohmanianTether.StreamFunctionTether
 import FrohmanianTether.VorticityL6Bound
 import FrohmanianTether.ObstructionAudit
+import FrohmanianTether.DirectionCondition
