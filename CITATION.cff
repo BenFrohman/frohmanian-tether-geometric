@@ -5,6 +5,7 @@ type: software
 authors:
   - family-names: Frohman
     given-names: Benjamin Stanley
+    alias: "B.S. Frohman"
     orcid: "https://orcid.org/0009-0006-7068-3718"
 version: 0.1.0
 date-released: 2026-11-04
