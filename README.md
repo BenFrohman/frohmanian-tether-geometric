@@ -63,3 +63,7 @@ theorems in `FrohmanianTether.*`: only `propext`, `Classical.choice`, `Quot.soun
 ## License
 
 Apache 2.0 (see `LICENSE`). Cite via `CITATION.cff`.
+
+## Copyright
+
+© 2026 Benjamin Stanley Frohman.
