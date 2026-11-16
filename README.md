@@ -1,5 +1,9 @@
 # The Frohmanian Tether on SDiff(𝕋³)
 
+## Kernel certificate
+
+[certificates/CERTIFICATE.md](certificates/CERTIFICATE.md): commit `282f197`, `leanprover/lean4:v4.30.0-rc1`. `lake build` passes; the sorry/axiom scan finds 0 hits; **529 theorems depend only on `propext`, `Classical.choice`, `Quot.sound`**; 24 of 24 modules replayed through the kernel, 0 failures ([CI run](https://github.com/BenFrohman/frohmanian-tether-geometric/actions/runs/43937807777)).
+
 Lean 4 formalization and manuscript for *The Frohmanian Tether on SDiff(𝕋³): A Metriplectic
 Correction, Its Canonicity, and an Obstruction to Damping* (Benjamin Stanley Frohman).
 
