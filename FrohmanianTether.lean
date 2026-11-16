@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 Benjamin Stanley Frohman. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Benjamin Stanley Frohman
+-/
+
 /- Frohmanian Tether on SDiff(T³): root of the standalone library. -/
 import FrohmanianTether.AnalyticPipeline
 import FrohmanianTether.ArnoldGeometric
@@ -22,3 +28,9 @@ import FrohmanianTether.TorusStrainExclusion
 import FrohmanianTether.Uniqueness
 import FrohmanianTether.VelocitySlotTether
 import FrohmanianTether.ObstructionAudit
+
+/-!
+# FrohmanianTether
+
+Machine-checked Lean 4 module.
+-/
