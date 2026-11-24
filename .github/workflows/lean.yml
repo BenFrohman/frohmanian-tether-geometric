@@ -40,6 +40,24 @@ jobs:
           set -o pipefail
           lake build 2>&1 | tee build.log
           if grep -n "declaration uses 'sorry'" build.log; then echo "sorry in build"; exit 1; fi
+      - name: Guard lake-manifest.json against post-build drift
+        run: |
+          set -euo pipefail
+          if ! git cat-file -e HEAD:lake-manifest.json; then
+            echo "FAIL: committed tree has no lake-manifest.json"
+            exit 1
+          fi
+          git show HEAD:lake-manifest.json > /tmp/committed-lake-manifest.json
+          if ! cmp -s /tmp/committed-lake-manifest.json lake-manifest.json; then
+            echo "FAIL: lake-manifest.json differs from the committed version after the build"
+            git diff --no-index -- /tmp/committed-lake-manifest.json lake-manifest.json || true
+            exit 1
+          fi
+          echo "OK: lake-manifest.json matches the committed file"
+      - name: No-exclusion sorry scan (every tracked .lean file)
+        run: |
+          set -o pipefail
+          python3 certificates/tools/sorry_scan.py 2>&1 | tee sorry-scan.txt
       - name: Existing theorem audit (scripts/AxiomAudit.lean)
         run: |
           set -o pipefail
@@ -53,6 +71,47 @@ jobs:
           grep -q '^STRICT AUDIT PASS' strict-axiom-audit.txt
           if grep -v '^STRICT AUDIT PASS' strict-axiom-audit.txt | grep -qE 'STRICT AUDIT FAIL|sorryAx|ofReduceBool|error:'; then exit 1; fi
           grep '^STRICT AUDIT SUMMARY' strict-axiom-audit.txt
+      - name: Collect lake-manifest and lean-toolchain hashes
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p lean-out
+          if [ ! -f lake-manifest.json ]; then
+            echo "FAIL: lake-manifest.json was not present in the checkout" | tee lean-out/MISSING-lake-manifest.txt
+            exit 1
+          fi
+          if [ ! -f lean-toolchain ]; then
+            echo "FAIL: lean-toolchain was not present in the checkout" | tee lean-out/MISSING-lean-toolchain.txt
+            exit 1
+          fi
+          cp -a lake-manifest.json lean-out/lake-manifest.json
+          sha256sum lake-manifest.json | tee lean-out/lake-manifest.json.sha256sum
+          awk '{print $1}' lean-out/lake-manifest.json.sha256sum | tee lean-out/lake-manifest.json.sha256
+          cp -a lean-toolchain lean-out/lean-toolchain
+          sha256sum lean-toolchain | tee lean-out/lean-toolchain.sha256sum
+          awk '{print $1}' lean-out/lean-toolchain.sha256sum | tee lean-out/lean-toolchain.sha256
+          if [ -f build.log ]; then cp -a build.log lean-out/build.log; fi
+          if [ -f sorry-scan.txt ]; then cp -a sorry-scan.txt lean-out/sorry-scan.txt; fi
+          if [ -f axioms.txt ]; then cp -a axioms.txt lean-out/axioms.txt; fi
+          if [ -f strict-axiom-audit.txt ]; then cp -a strict-axiom-audit.txt lean-out/strict-axiom-audit.txt; fi
+          echo "lake-manifest.json sha256: $(cat lean-out/lake-manifest.json.sha256)"
+          echo "lean-toolchain sha256: $(cat lean-out/lean-toolchain.sha256)"
+          {
+            echo "commit: $(git rev-parse HEAD)"
+            echo "github_sha: ${GITHUB_SHA:-not set in environment}"
+            echo "github_run_id: ${GITHUB_RUN_ID:-not set in environment}"
+            echo "github_run_attempt: ${GITHUB_RUN_ATTEMPT:-not set in environment}"
+            echo "github_event_name: ${GITHUB_EVENT_NAME:-not set in environment}"
+            echo "github_repository: ${GITHUB_REPOSITORY:-not set in environment}"
+            echo "lake-manifest.json sha256: $(cat lean-out/lake-manifest.json.sha256)"
+            echo "lean-toolchain sha256: $(cat lean-out/lean-toolchain.sha256)"
+            echo "elan --version:"
+            if command -v elan >/dev/null 2>&1; then elan --version; else echo "elan was not on PATH"; fi
+            echo "lake --version:"
+            if command -v lake >/dev/null 2>&1; then lake --version; else echo "lake was not on PATH"; fi
+            echo "lean --version:"
+            if command -v lean >/dev/null 2>&1; then lean --version; else echo "lean was not on PATH"; fi
+          } | tee lean-out/versions.txt
       - uses: actions/upload-artifact@v4
         if: always()
         continue-on-error: true
@@ -60,6 +119,8 @@ jobs:
           name: lean-logs-${{ github.event_name }}-${{ github.run_id }}
           path: |
             build.log
+            sorry-scan.txt
             axioms.txt
             strict-axiom-audit.txt
+            lean-out/
           if-no-files-found: warn

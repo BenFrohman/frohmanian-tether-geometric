@@ -63,10 +63,11 @@ theorems in `FrohmanianTether.*`: only `propext`, `Classical.choice`, `Quot.soun
 * `FrohmanianTether/` — Lean modules (extracted from the author's NS_Millennium_Proof project,
   branch `sdiff-abstract-action`, commit `0c9cfdb`).
 * `manuscript/main.tex`, `manuscript/main.pdf` — the paper.
+* `paper/tether_holds_nothing.tex`, `paper/tether_holds_nothing.pdf` — the 4 November 2026 note *A Tether That Holds Nothing* (full source; CC BY 4.0, see `paper/LICENSE-CC-BY-4.0`).
 
 ## License
 
-Apache 2.0 (see `LICENSE`). Cite via `CITATION.cff`.
+Code is licensed under Apache 2.0 (see `LICENSE`). The note *A Tether That Holds Nothing* in `paper/` is licensed under CC BY 4.0 (see `paper/LICENSE-CC-BY-4.0` and `NOTICE`). Cite via `CITATION.cff`.
 
 ## Copyright
 

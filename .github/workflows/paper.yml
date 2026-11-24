@@ -1,0 +1,50 @@
+# Author: Benjamin Stanley Frohman
+# Rebuild the 4 November 2026 note "A Tether That Holds Nothing" from its TeX source.
+name: Paper build
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  tether-holds-nothing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install XeLaTeX and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-latex-extra \
+            latexmk \
+            fonts-dejavu-core \
+            poppler-utils
+      - name: Rebuild paper/tether_holds_nothing.pdf from the TeX source
+        working-directory: paper
+        run: |
+          set -o pipefail
+          latexmk -xelatex -interaction=nonstopmode -halt-on-error tether_holds_nothing.tex 2>&1 | tee paper-build.log
+          test -f tether_holds_nothing.pdf
+          pdfinfo tether_holds_nothing.pdf | tee -a paper-build.log
+          echo "---- Overfull / Underfull boxes ----" | tee -a paper-build.log
+          grep -nE 'Overfull|Underfull' tether_holds_nothing.log | tee -a paper-build.log || echo "0 overfull or underfull boxes"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tether-holds-nothing-paper-${{ github.run_id }}
+          path: |
+            paper/tether_holds_nothing.pdf
+            paper/tether_holds_nothing.log
+            paper/paper-build.log
+          if-no-files-found: warn
